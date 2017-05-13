@@ -1,0 +1,18 @@
+Package: ShinyConc
+Type: Package
+Title: Build custom concordancers with Shiny
+Version: 0.0.0
+Author: Christoph Wolk
+Maintainer: Christoph Wolk <Christoph.B.Wolk@anglistik.uni-giessen.de>
+Description: This package contains basic functions and Shiny modules for
+    building concordancers using Shiny.
+License: AGPL
+Encoding: UTF-8
+LazyData: true
+Imports:
+    shinyBS,
+    stringr,
+    readr
+Depends:
+    shiny
+RoxygenNote: 6.0.1
