@@ -17,8 +17,9 @@ SelectorToUI <- function(id, selector, corpus, ns) {
     outvals[selector$default] else
       if (is.character(selector$default))
         selector$default else
-          if (identical(selector$default, TRUE))
-            outvals else NULL
+          if (identical(selector$default, TRUE)) {
+            if (identical(selector$type, "radioButtons"))
+              outvals[1] else outvals } else NULL
 
   tagList(uiElement[[selector$type]](
     ns(id), label = h3(selector$label), choices = outvals, selected=default))
