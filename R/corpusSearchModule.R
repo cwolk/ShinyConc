@@ -92,7 +92,7 @@ searchModule <- function(input, output, session, config, mainCorpus,
     }
 
     if (input$searchType == "Data")
-      data <- data[,config$SearchTool$Data$DisplayColumns]
+      data <- data[,config$SearchTool$Data$DisplayColumns,drop=FALSE]
     dt <- datatable(data, selection = 'single', rownames=FALSE,
                     options = list(autoWidth = FALSE,
                                    columnDefs = createClassesMap(data, list(
