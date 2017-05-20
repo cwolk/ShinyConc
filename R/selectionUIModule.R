@@ -15,8 +15,10 @@ SelectorToUI <- function(id, selector, corpus, ns) {
 
   default <- if(is.numeric(selector$default))
     outvals[selector$default] else
-      if (is.character(selector$default))
-        selector$default else
+      if (is.character(selector$default)) {
+        if (identical(selector$type, "radioButtons"))
+          selector$default[1] else selector$default
+      } else
           if (identical(selector$default, TRUE)) {
             if (identical(selector$type, "radioButtons"))
               outvals[1] else outvals } else NULL
