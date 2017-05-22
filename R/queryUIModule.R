@@ -22,8 +22,9 @@ queryFieldInput <- function(id, label="Search/Filter", isMain=TRUE, useSubmitBut
   ns <- NS(id)
   tagList(
     h3(label),
+    div(id = if (useSubmitButton & isMain) "mainQueryField",
     fluidRow(column((if (useSubmitButton & isMain) 10 else 12),
-                    textInput(ns("searchterm"), label=NULL, value = "")),
+                      textInput(ns("searchterm"), label=NULL, value = "")),
              if (useSubmitButton & isMain)
                column(2, actionButton(ns("submitButton"), icon("search")))),
     radioButtons(ns("mode"), label=h3("Search mode"),
@@ -32,7 +33,7 @@ queryFieldInput <- function(id, label="Search/Filter", isMain=TRUE, useSubmitBut
                                "regular expression" = "regex"),
                  selected="word"),
     checkboxInput(ns("casesensitive"), label = "case-sensitive", value = FALSE)
-  )
+  ))
 }
 
 #' Query field module server function
