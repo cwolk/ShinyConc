@@ -47,7 +47,7 @@ Base.Count <- function(text, querystring) {
   pairtable <- table(unlist(lapply(tokenlist, unique)))
   data.frame("Token" = names(freqtable),
              "Frequency" = as.vector(freqtable),
-             "Pairs" = as.vector(pairtable[names(freqtable)]),
+             "Texts" = as.vector(pairtable[names(freqtable)]),
              stringsAsFactors = FALSE)
 }
 # TODO: make Pairs application-neutral

@@ -89,6 +89,10 @@ countModule <- function(input, output, session, config, mainCorpus,
       dt <- dt %>% formatStyle(
         "Pairs", background = styleColorBar(c(0, nrow(mainCorpus$selectedCorpus())),
                                             "lightblue"))
+    if ("Texts" %in% colnames(data))
+      dt <- dt %>% formatStyle(
+        "Texts", background = styleColorBar(c(0, nrow(mainCorpus$selectedCorpus())),
+                                            "lightblue"))
     if ("per hundred words" %in% colnames(data))
       dt <- dt %>% formatStyle(
         "per hundred words", background = styleColorBar(data$`per hundred words`,
