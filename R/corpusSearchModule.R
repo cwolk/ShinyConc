@@ -105,9 +105,8 @@ searchModule <- function(input, output, session, config, mainCorpus,
 
   output$Summary <- renderText(switch(
     input$searchType,
-    "KWIC" = sprintf("%d entries found, with %d tokens in total",
-                     length(unique(result()$ID)), nrow(result())),
-    "Data" = sprintf("%d entries found", length(unique(result()$ID)))
+    "KWIC" = sprintf("%d tokens found", nrow(result())),
+    "Data" = sprintf("%d entries found", nrow(result))
   ))
 
   output$downloadSearch <- downloadHandler(
