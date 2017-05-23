@@ -15,7 +15,7 @@ searchModuleOutput <- function(id, panel=NULL) {
     fluidRow(
       column(6, radioButtons(ns("searchType"), label="Display", inline=TRUE,
         choices=list("KWIC" = "KWIC", "Data" = "Data"),
-        selected="Data")),
+        selected="KWIC")),
       column(6, textOutput(ns("Summary")))),
     dataTableOutput(ns("KWIC")),
     fluidRow(
