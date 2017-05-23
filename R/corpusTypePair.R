@@ -93,7 +93,7 @@ getCounts.pairCorpus <- function(corpus, querystring, controls, ...) {
 #' @examples
 getWordlist.pairCorpus <- function(corpus, querystring, controls, ...) {
   obj <- corpus
-  corpus <- corpus$corpus
+  corpus <- filterCorpus(corpus, querystring, controls, ...)$corpus
   if (controls$ShinyConc.mode %in% c("Q|A", "Q&A"))
     Base.Wordlist(paste(corpus$Q, corpus$A), querystring)
   else

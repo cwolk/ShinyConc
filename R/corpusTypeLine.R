@@ -78,6 +78,6 @@ getCounts.lineCorpus <- function(corpus, querystring, controls, ...) {
 #' @examples
 getWordlist.lineCorpus <- function(corpus, querystring, controls, ...) {
   obj <- corpus
-  corpus <- corpus$corpus
+  corpus <- filterCorpus(corpus, querystring, controls, ...)$corpus
   Base.Wordlist(corpus[,"text"], querystring)
 }
