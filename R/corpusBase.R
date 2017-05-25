@@ -13,6 +13,8 @@ Base.KWIC <- function(text, querystring, meta, contextlength=30) {
   if (querystring %in% c("", "\\b\\b"))
     return(NULL)
   matches <- stringr::str_locate_all(text, querystring)
+  if (length(matches) == 0)
+    return(data.frame(Results="Nothing found."))
   matchnums <- sapply(matches, nrow)
   cmatch <- rep(text, matchnums)
   mmatches <- do.call(rbind, matches)
