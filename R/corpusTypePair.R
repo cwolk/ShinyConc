@@ -49,7 +49,7 @@ filterCorpus.pairCorpus <- function(corpus, querystring, controls, ...) {
 #' @examples
 getKWIC.pairCorpus <- function(corpus, querystring, controls, ...) {
   obj <- corpus
-  corpus <- corpus$corpus
+  corpus <- filterCorpus(corpus, querystring, controls)$corpus
   if (controls$ShinyConc.mode %in% c("Q|A", "Q&A")) {
     meta <- interleave.df(corpus[, obj$KWICcolselect, drop=FALSE],
                           corpus[, obj$KWICcolselect, drop=FALSE])
