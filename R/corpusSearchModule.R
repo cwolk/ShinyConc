@@ -121,7 +121,11 @@ searchModule <- function(input, output, session, config, mainCorpus,
       #browser()
       if ((! is.null(result())) && (nrow(result()) > 0) &&
           (! is.null(input$KWIC_rows_selected))) {
-        result()[as.numeric(input$KWIC_rows_selected),]
+        if (input$searchType == "Data") {
+          result()[as.numeric(input$KWIC_rows_selected),]
+        } else {
+          mainCorpus$fullcorpus()$corpus[mainCorpus$fullcorpus()$corpus == result()[as.numeric(input$KWIC_rows_selected), "ID"],][1,]
+        }
       } else NULL
     })
   ))
