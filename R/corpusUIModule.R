@@ -84,7 +84,7 @@ corpusUIInput <- function(input, output, session, config,
       query$submitButton()
     input$runButton
     ## selections and restrictions
-    select$selection()
+    select$controls()
     restrictions$activeRestrictions$restrictions
     restrictions$activeRestrictions$isActive
     TRUE
