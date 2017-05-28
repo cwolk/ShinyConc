@@ -4,10 +4,10 @@
 \alias{loadCorpus}
 \title{Load corpus}
 \usage{
-loadCorpus(dir, meta, source, type)
+loadCorpus(corpusdir, meta, source, type, config)
 }
 \arguments{
-\item{type}{}
+\item{config}{}
 }
 \description{
 Load corpus

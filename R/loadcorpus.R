@@ -8,7 +8,7 @@ ctypemapper <- c(
 
 #' Load corpus
 #'
-#' @param dir
+#' @param corpusdir
 #' @param meta
 #' @param source
 #' @param type
@@ -18,7 +18,7 @@ ctypemapper <- c(
 #' @export
 #'
 #' @examples
-loadCorpus <- function(dir, meta, source, type, config, corpusdir="corpus") {
+loadCorpus <- function(corpusdir, meta, source, type, config) {
   if (identical(source, "file")) {
     if ("text" %in% colnames(meta))
       stop("text column already present in the metadata")
@@ -42,4 +42,54 @@ loadCorpus <- function(dir, meta, source, type, config, corpusdir="corpus") {
 
   ctypemapper[[type]](meta, KWICcolselect=config$SearchTool$KWIC$DisplayExtraColumns)
 
+}
+
+
+#' Title
+#'
+#' @param config
+#' @param corpusdir
+#' @param metafile
+#'
+#' @return
+#' @export
+#'
+#' @examples
+cacheCorpus <- function(config, corpusdir="corpus", metafile="meta.csv") {
+  cachefile <- paste0(corpusdir, "/", "corpus.Rdata")
+  metafile <- paste0(corpusdir, "/", metafile)
+  meta <- read.csv(metafile, stringsAsFactors = FALSE)
+  corpus <- loadCorpus(corpusdir, meta, config$Corpus$Source,
+                       config$Corpus$Type, config)
+  mtimes.meta <- file.mtime(metafile)
+  mtimes.corpus <- file.mtime(paste0(corpusdir, "/", corpus$corpus$file))
+  save(corpus, mtimes.meta, mtimes.corpus, file=cachefile)
+  }
+
+#' Title
+#'
+#' @param config
+#' @param corpusdir
+#' @param metafile
+#'
+#' @return
+#' @export
+#'
+#' @examples
+getCachedCorpus <- function(config, corpusdir="corpus", metafile="meta.csv") {
+  cachefile <- paste0(corpusdir, "/", "corpus.Rdata")
+  metaf <- paste0(corpusdir, "/", metafile)
+    if (file.exists(cachefile)) {
+      load(cachefile, envir=.GlobalEnv)
+      newmtimes.meta <- file.mtime(metaf)
+      newmtimes.corpus <- file.mtime(paste0(corpusdir, "/", corpus$corpus$file))
+      if (! (all(newmtimes.corpus <= mtimes.corpus) &&
+             newmtimes.meta == mtimes.meta)) {
+        cacheCorpus(config, corpusdir, metafile)
+        getCachedCorpus(config, corpusdir, metafile)
+      }
+    } else {
+      cacheCorpus(config, corpusdir, metafile)
+      getCachedCorpus(config, corpusdir, metafile)
+  }
 }
