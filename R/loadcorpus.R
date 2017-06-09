@@ -6,6 +6,20 @@ ctypemapper <- c(
   pair = pairCorpus
 )
 
+process_addNwords <- function(corpus, type){
+  if (identical(type, "pair")) {
+    corpus$ShinyConc.nWordsQ <- stringr::str_count(corpus$Q, "\\w+")
+    corpus$ShinyConc.nWordsA <- stringr::str_count(corpus$A, "\\w+")
+  } else
+    corpus$ShinyConc.nWords <- stringr::str_count(corpus$text, "\\w+")
+  corpus
+}
+
+processCorpus <- function(corpus, config) {
+  corpus <- process_addNwords(corpus, config$Corpus$Type)
+}
+
+
 #' Load corpus
 #'
 #' @param corpusdir
@@ -43,12 +57,7 @@ loadCorpus <- function(corpusdir, meta, config=NULL,
       })
   }
 
-  if (identical(type, "pair")) {
-    meta$ShinyConc.nWordsQ <- stringr::str_count(meta$Q, "\\w+")
-    meta$ShinyConc.nWordsA <- stringr::str_count(meta$A, "\\w+")
-  } else
-    meta$ShinyConc.nWords <- stringr::str_count(meta$text, "\\w+")
-
+  meta <- processCorpus(meta, config)
 
   ctypemapper[[type]](meta, KWICcolselect=config$SearchTool$KWIC$DisplayExtraColumns)
 
