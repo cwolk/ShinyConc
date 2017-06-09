@@ -18,7 +18,10 @@ ctypemapper <- c(
 #' @export
 #'
 #' @examples
-loadCorpus <- function(corpusdir, meta, source, type, config) {
+loadCorpus <- function(corpusdir, meta, config=NULL,
+                       charset=config$corpusCharset,
+                       source=config$Corpus$Source,
+                       type=config$Corpus$Type) {
   if (identical(source, "file")) {
     if ("text" %in% colnames(meta))
       stop("text column already present in the metadata")
@@ -40,6 +43,13 @@ loadCorpus <- function(corpusdir, meta, source, type, config) {
       })
   }
 
+  if (identical(type, "pair")) {
+    meta$ShinyConc.nWordsQ <- stringr::str_count(meta$Q, "\\w+")
+    meta$ShinyConc.nWordsA <- stringr::str_count(meta$A, "\\w+")
+  } else
+    meta$ShinyConc.nWords <- stringr::str_count(meta$text, "\\w+")
+
+
   ctypemapper[[type]](meta, KWICcolselect=config$SearchTool$KWIC$DisplayExtraColumns)
 
 }
@@ -59,8 +69,7 @@ cacheCorpus <- function(config, corpusdir="corpus", metafile="meta.csv") {
   cachefile <- paste0(corpusdir, "/", "corpus.Rdata")
   metafile <- paste0(corpusdir, "/", metafile)
   meta <- read.csv(metafile, stringsAsFactors = FALSE)
-  corpus <- loadCorpus(corpusdir, meta, config$Corpus$Source,
-                       config$Corpus$Type, config)
+  corpus <- loadCorpus(corpusdir, meta, config)
   mtimes.meta <- file.mtime(metafile)
   mtimes.corpus <- file.mtime(paste0(corpusdir, "/", corpus$corpus$file))
   save(corpus, mtimes.meta, mtimes.corpus, file=cachefile)
@@ -93,3 +102,4 @@ getCachedCorpus <- function(config, corpusdir="corpus", metafile="meta.csv") {
       getCachedCorpus(config, corpusdir, metafile)
   }
 }
+
