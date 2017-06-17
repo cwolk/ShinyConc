@@ -35,7 +35,7 @@ processCorpus <- function(corpus, config) {
 loadCorpus <- function(corpusdir, meta, config=NULL,
                        charset=config$corpusCharset,
                        source=config$Corpus$Source,
-                       type=config$Corpus$Type) {
+                       type=config$Corpus$Type, ...) {
   if (identical(source, "file")) {
     if ("text" %in% colnames(meta))
       stop("text column already present in the metadata")
@@ -59,7 +59,9 @@ loadCorpus <- function(corpusdir, meta, config=NULL,
 
   meta <- processCorpus(meta, config)
 
-  ctypemapper[[type]](meta, KWICcolselect=config$SearchTool$KWIC$DisplayExtraColumns)
+  corpus <- ctypemapper[[type]](meta, KWICcolselect=config$SearchTool$KWIC$DisplayExtraColumns)
+
+  return(function(...) corpus)
 
 }
 
@@ -74,15 +76,23 @@ loadCorpus <- function(corpusdir, meta, config=NULL,
 #' @export
 #'
 #' @examples
-cacheCorpus <- function(config, corpusdir="corpus", metafile="meta.csv") {
+cacheCorpus <- function(config, corpusdir="corpus", metafile="meta.csv",
+                        corpusloader=loadCorpus, filelist=NULL, ...) {
+  # TODO: branch if custom, don't read meta
   cachefile <- paste0(corpusdir, "/", "corpus.Rdata")
-  metafile <- paste0(corpusdir, "/", metafile)
-  meta <- read.csv(metafile, stringsAsFactors = FALSE)
-  corpus <- loadCorpus(corpusdir, meta, config)
-  mtimes.meta <- file.mtime(metafile)
-  mtimes.corpus <- file.mtime(paste0(corpusdir, "/", corpus$corpus$file))
-  save(corpus, mtimes.meta, mtimes.corpus, file=cachefile)
-  }
+  if (config$Corpus$Source != "custom") {
+    metafile <- paste0(corpusdir, "/", metafile)
+    meta <- read.csv(metafile, stringsAsFactors = FALSE)
+  } else if (is.null(filelist))
+    stop("Please supply a file list to use caching with custom corpus readers.")
+  if (is.null(filelist))
+    filelist <- c(metafile, if(config$Corpus$Source == "file") paste0(corpusdir, "/", meta$file) else NULL)
+  mtimes <- file.mtime(filelist)
+  selectCorpus <- corpusloader(corpusdir, meta, config, ...)
+  attributes(selectCorpus)$filelist <-  filelist
+  attributes(selectCorpus)$mtimes   <-  mtimes
+  save(selectCorpus, file=cachefile)
+}
 
 #' Title
 #'
@@ -94,21 +104,27 @@ cacheCorpus <- function(config, corpusdir="corpus", metafile="meta.csv") {
 #' @export
 #'
 #' @examples
-getCachedCorpus <- function(config, corpusdir="corpus", metafile="meta.csv") {
+getCachedCorpus <- function(config, corpusdir="corpus", metafile="meta.csv",
+                            filelist = NULL, corpusloader=loadCorpus) {
   cachefile <- paste0(corpusdir, "/", "corpus.Rdata")
-  metaf <- paste0(corpusdir, "/", metafile)
+  orig_filelist <- filelist
     if (file.exists(cachefile)) {
       load(cachefile, envir=.GlobalEnv)
-      newmtimes.meta <- file.mtime(metaf)
-      newmtimes.corpus <- file.mtime(paste0(corpusdir, "/", corpus$corpus$file))
-      if (! (all(newmtimes.corpus <= mtimes.corpus) &&
-             newmtimes.meta == mtimes.meta)) {
-        cacheCorpus(config, corpusdir, metafile)
-        getCachedCorpus(config, corpusdir, metafile)
+      if (is.null(filelist))
+        filelist <- c(attributes(selectCorpus)$filelist)
+      mtimes <- file.mtime(filelist)
+      if (! ((filelist == attributes(selectCorpus)$filelist) &&
+             all(mtimes <= attributes(selectCorpus)$mtimes))) {
+        cacheCorpus(config, corpusdir, metafile, corpusloader=corpusloader,
+                    filelist=orig_filelist)
+        getCachedCorpus(config, corpusdir, metafile, corpusloader=corpusloader,
+                        filelist=orig_filelist)
       }
     } else {
-      cacheCorpus(config, corpusdir, metafile)
-      getCachedCorpus(config, corpusdir, metafile)
+      cacheCorpus(config, corpusdir, metafile, corpusloader=corpusloader,
+                  filelist=orig_filelist)
+      getCachedCorpus(config, corpusdir, metafile, corpusloader=corpusloader,
+                      filelist=orig_filelist)
   }
 }
 
