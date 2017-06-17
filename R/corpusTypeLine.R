@@ -8,9 +8,8 @@
 #'
 #' @examples
 lineCorpus <- function(corpusdf, KWICcolselect = "ID") {
-  corp <- structure(list(), class="lineCorpus")
-  corp$corpus <- corpusdf
-  corp$KWICcolselect <- KWICcolselect
+  corp <- basicCorpus(corpusdf, KWICcolselect)
+  class(corp) <- append(class(corp),"lineCorpus")
   corp
 }
 

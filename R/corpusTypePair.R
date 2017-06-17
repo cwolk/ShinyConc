@@ -8,9 +8,8 @@
 #'
 #' @examples
 pairCorpus <- function(corpusdf, KWICcolselect = "ID") {
-  corp <- structure(list(), class="pairCorpus")
-  corp$corpus <- corpusdf
-  corp$KWICcolselect <- KWICcolselect
+  corp <- basicCorpus(corpusdf, KWICcolselect)
+  class(corp) <- append(class(corp),"pairCorpus")
   corp
 }
 

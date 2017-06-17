@@ -6,20 +6,6 @@ ctypemapper <- c(
   pair = pairCorpus
 )
 
-process_addNwords <- function(corpus, type){
-  if (identical(type, "pair")) {
-    corpus$ShinyConc.nWordsQ <- stringr::str_count(corpus$Q, "\\w+")
-    corpus$ShinyConc.nWordsA <- stringr::str_count(corpus$A, "\\w+")
-  } else
-    corpus$ShinyConc.nWords <- stringr::str_count(corpus$text, "\\w+")
-  corpus
-}
-
-processCorpus <- function(corpus, config) {
-  corpus <- process_addNwords(corpus, config$Corpus$Type)
-}
-
-
 #' Load corpus
 #'
 #' @param corpusdir
