@@ -7,7 +7,7 @@ process_addID <- function(corpus) {
 
 process_addNwords <- function(corpus, type){
   if (identical(type, "pair")) {
-    if (all(c("ShinyConc.nWordsQ", "ShinyConc.nWordsQ")  %in% colnames(corpus)))
+    if (all(c("ShinyConc.nWordsQ", "ShinyConc.nWordsA")  %in% colnames(corpus)))
       return(corpus)
     corpus$ShinyConc.nWordsQ <- stringr::str_count(corpus$Q, "\\w+")
     corpus$ShinyConc.nWordsA <- stringr::str_count(corpus$A, "\\w+")
@@ -18,8 +18,8 @@ process_addNwords <- function(corpus, type){
   corpus
 }
 
-processCorpus <- function(corpus, config) {
-  corpus <- process_addNwords(corpus, config$Corpus$Type)
+processCorpus <- function(corpus, type="line") {
+  corpus <- process_addNwords(corpus, type)
   corpus <- process_addID(corpus)
 }
 
@@ -35,9 +35,9 @@ processCorpus <- function(corpus, config) {
 #' @export
 #'
 #' @examples
-basicCorpus <- function(corpusdf, KWICcolselect = "ID") {
+basicCorpus <- function(corpusdf, KWICcolselect = "ID", type="line") {
   corp <- structure(list(), class="basicCorpus")
-  corp$corpus <- corpusdf
+  corp$corpus <- processCorpus(corpusdf, type)
   corp$KWICcolselect <- KWICcolselect
   corp
 }
