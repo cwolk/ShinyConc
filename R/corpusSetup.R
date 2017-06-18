@@ -11,10 +11,11 @@ process_addNwords <- function(corpus, type){
       return(corpus)
     corpus$ShinyConc.nWordsQ <- stringr::str_count(corpus$Q, "\\w+")
     corpus$ShinyConc.nWordsA <- stringr::str_count(corpus$A, "\\w+")
-  } else
-    if ("ShinyConc.nWords" %in% colnames(corpus))
-      return(corpus)
-    corpus$ShinyConc.nWords <- stringr::str_count(corpus$text, "\\w+")
+  } else {
+      if ("ShinyConc.nWords" %in% colnames(corpus))
+        return(corpus)
+      corpus$ShinyConc.nWords <- stringr::str_count(corpus$text, "\\w+")
+  }
   corpus
 }
 

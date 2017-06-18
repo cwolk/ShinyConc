@@ -8,7 +8,7 @@
 #'
 #' @examples
 pairCorpus <- function(corpusdf, KWICcolselect = "ID") {
-  corp <- basicCorpus(corpusdf, KWICcolselect)
+  corp <- basicCorpus(corpusdf, KWICcolselect, type="pair")
   class(corp) <- append(class(corp),"pairCorpus")
   corp
 }
@@ -98,4 +98,24 @@ getWordlist.pairCorpus <- function(corpus, querystring, controls, ...) {
     Base.Wordlist(paste(corpus$Q, corpus$A), querystring)
   else
     Base.Wordlist(corpus[,controls$ShinyConc.mode], querystring)
+}
+
+#' Title
+#'
+#' @param corpus
+#' @param controls
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+getWordcount.pairCorpus <- function(corpus, controls, ...){
+  switch(controls$ShinyConc.mode,
+         "Q"= sum(corpus$corpus$ShinyConc.nWordsQ),
+         "A"= sum(corpus$corpus$ShinyConc.nWordsA),
+         "Q|A" = sum(corpus$corpus$ShinyConc.nWordsQ) +
+                 sum(corpus$corpus$ShinyConc.nWordsA),
+         "Q&A"= sum(corpus$corpus$ShinyConc.nWordsQ) +
+                sum(corpus$corpus$ShinyConc.nWordsA))
 }

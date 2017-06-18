@@ -56,3 +56,17 @@ getCounts <- function(corpus, querystring, controls, ...)
 # @examples getWordlist(corpus, querystring)
 getWordlist <- function(corpus, querystring, controls, ...)
   UseMethod("getWordlist")
+
+#' Determine the number of words in corpus
+#'
+#' @param corpus The corpus to count
+#' @param controls
+#' @return a number indicating the amount of words in the corpus. If the number of
+#'  words per file is not specified in the corpus (as required by the corpus type),
+#'  ShinyConc will default to using the number of matches for the regular
+#'  expression "\w+"
+#' @export
+#'
+# @examples getWordlist(corpus, querystring)
+getWordcount <- function(corpus, controls, ...)
+  UseMethod("getWordcount")

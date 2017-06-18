@@ -4,7 +4,8 @@
 \alias{getCachedCorpus}
 \title{Title}
 \usage{
-getCachedCorpus(config, corpusdir = "corpus", metafile = "meta.csv")
+getCachedCorpus(config, corpusdir = "corpus", metafile = "meta.csv",
+  filelist = NULL, corpusloader = loadCorpus)
 }
 \arguments{
 \item{metafile}{}

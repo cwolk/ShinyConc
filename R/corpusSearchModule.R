@@ -63,6 +63,9 @@ searchModule <- function(input, output, session, config, mainCorpus,
     return (result)
   })
 
+  subcorpusSize <- reactive(getWordcount(mainCorpus$selectedCorpus(),
+                                              mainCorpus$select$controls()))
+
   result <- reactive(
     if (config$useSubmitButton) {
       mainCorpus$trigger()
@@ -108,8 +111,10 @@ searchModule <- function(input, output, session, config, mainCorpus,
 
   output$Summary <- renderText(switch(
     input$searchType,
-    "KWIC" = sprintf("%d tokens found", nrow(result())),
-    "Data" = sprintf("%d entries found", nrow(result))
+    "KWIC" = sprintf("%d tokens found (%d words in selection)",
+                     nrow(result()), subcorpusSize()),
+    "Data" = sprintf("%d entries found (%d words in selection)",
+                     nrow(result()), subcorpusSize())
   ))
 
   output$downloadSearch <- downloadHandler(

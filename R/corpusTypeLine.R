@@ -82,3 +82,16 @@ getWordlist.lineCorpus <- function(corpus, querystring, controls, ...) {
   corpus <- filterCorpus(corpus, querystring, controls, ...)$corpus
   Base.Wordlist(corpus[,"text"], querystring)
 }
+
+#' Title
+#'
+#' @param corpus
+#' @param controls
+#'
+#' @return
+#' @export
+#'
+#' @examples
+getWordcount.lineCorpus <- function(corpus, controls) {
+  return(sum(corpus$corpus$ShinyConc.nWords))
+}

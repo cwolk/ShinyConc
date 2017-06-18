@@ -4,7 +4,8 @@
 \alias{loadCorpus}
 \title{Load corpus}
 \usage{
-loadCorpus(corpusdir, meta, source, type, config)
+loadCorpus(corpusdir, meta, config = NULL, charset = config$corpusCharset,
+  source = config$Corpus$Source, type = config$Corpus$Type, ...)
 }
 \arguments{
 \item{config}{}
