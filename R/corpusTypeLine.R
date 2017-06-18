@@ -25,8 +25,10 @@ lineCorpus <- function(corpusdf, KWICcolselect = "ID") {
 #'
 #' @examples
 filterCorpus.lineCorpus <- function(corpus, querystring, controls, ...) {
+  if (attributes(querystring)$searchterm == "")
+    return(corpus)
   corpus$corpus <- corpus$corpus[str_detect(corpus$corpus$text,
-                                                 querystring),]
+                                            querystring),]
   corpus
 }
 

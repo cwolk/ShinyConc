@@ -25,6 +25,8 @@ pairCorpus <- function(corpusdf, KWICcolselect = "ID") {
 #'
 #' @examples
 filterCorpus.pairCorpus <- function(corpus, querystring, controls, ...) {
+  if (attributes(querystring)$searchterm == "")
+    return(corpus)
   corpus$corpus <- switch(controls$ShinyConc.mode,
          "Q"= corpus$corpus[str_detect(corpus$corpus$Q, querystring),],
          "A"= corpus$corpus[str_detect(corpus$corpus$A, querystring),],
