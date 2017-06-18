@@ -49,11 +49,11 @@ searchContextModule <- function(input, output, session, config,
     lapply(config$ContextDisplay$Columns, function(column) {
       output[[column]] <- renderUI(
         if (! is.null(searchTool$selected())) {
-          queryS <- mainCorpus$query$querystring()
-          if (queryS == "")
+          if (attributes(mainCorpus$query$querystring())$searchterm == "")
             p(searchTool$selected()[[column]])
           else
-            HTML(annotate_html(searchTool$selected()[[column]], queryS))
+            HTML(annotate_html(searchTool$selected()[[column]],
+                               mainCorpus$query$querystring()))
 
         } else p("select concordance line"))
     })
