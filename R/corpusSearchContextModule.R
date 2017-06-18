@@ -69,6 +69,7 @@ searchContextModule <- function(input, output, session, config,
               stringr::str_length(searchTool$selected()$text),
               searchTool$selected()$ShinyConc.KWICmatchEnd + 700))
         extract <- stringr::str_sub(searchTool$selected()$text, positions)
+        if (is.na(extract)) return (NULL) # when display is filtered away
         extract <- paste(if (positions[1] == 1) NULL else "...",
                          extract,
                          if (positions[2] ==
