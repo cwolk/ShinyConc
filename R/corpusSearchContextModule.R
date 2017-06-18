@@ -74,7 +74,10 @@ searchContextModule <- function(input, output, session, config,
                          if (positions[2] ==
                              stringr::str_length(searchTool$selected()$text))
                            NULL else "...", sep="")
-        HTML(annotate_html(extract,  mainCorpus$query$querystring()))
+        if (attributes(mainCorpus$query$querystring())$searchterm == "")
+          p(extract)
+        else
+          HTML(annotate_html(extract,  mainCorpus$query$querystring()))
       } else p("select concordance line")
       })
   }
