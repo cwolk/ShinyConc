@@ -44,7 +44,7 @@ filterCorpus.lineCorpus <- function(corpus, querystring, controls, ...) {
 getKWIC.lineCorpus <- function(corpus, querystring, controls, ...) {
   obj <- corpus
   corpus <- corpus$corpus
-  Base.KWIC(corpus[,"text"], querystring, corpus[,obj$KWICcolselect,drop=FALSE])
+  Base.KWIC(corpus[,"text"], querystring, corpus)
 }
 
 #' Count occurrences for lineCorpus
