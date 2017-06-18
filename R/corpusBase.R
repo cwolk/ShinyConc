@@ -26,6 +26,8 @@ Base.KWIC <- function(text, querystring, meta, contextlength=30) {
              right = stringr::str_sub(cmatch, mmatches[,"end"]+1,
                            pmin(mmatches[,"end"] + contextlength,
                                 stringr::str_length(cmatch))),
+             ShinyConc.KWICmatchStart = mmatches[,"start"],
+             ShinyConc.KWICmatchEnd = mmatches[,"end"],
              stringsAsFactors = FALSE)
 
 }

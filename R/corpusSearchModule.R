@@ -127,10 +127,12 @@ searchModule <- function(input, output, session, config, mainCorpus,
         if (input$searchType == "Data") {
           result()[as.numeric(input$KWIC_rows_selected),]
         } else {
-          mainCorpus$fullcorpus()$corpus[mainCorpus$fullcorpus()$corpus == result()[as.numeric(input$KWIC_rows_selected), "ID"],][1,]
+          result()[as.numeric(input$KWIC_rows_selected),]
+#          mainCorpus$fullcorpus()$corpus[mainCorpus$fullcorpus()$corpus == result()[as.numeric(input$KWIC_rows_selected), "ShinyConc.ID"],][1,]
         }
       } else NULL
-    })
+    }),
+    mode=reactive(input$searchType)
   ))
 
 
