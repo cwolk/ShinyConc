@@ -16,6 +16,16 @@ searchContextOutput <- function(id, config) {
                h4(columnName),
                uiOutput(ns(config$ContextDisplay$Columns[columnName])))
     }))
+  } else if (identical(config$ContextDisplay$Type, "LocalContext")) {
+    tagList(
+      bsModal("fulltextmodal", title="Full Text", size="large",
+              trigger=ns("fulltextbutton"), uiOutput(ns("fulltextView"))),
+      fluidRow(column(4, h4("Context")),
+               column(4, NULL),
+               column(4, actionButton(ns("fulltextbutton"),
+                                      label="Show full text"))),
+      uiOutput(ns("localcontext"))
+    )
   }
 }
 
@@ -39,7 +49,6 @@ searchContextModule <- function(input, output, session, config,
     lapply(config$ContextDisplay$Columns, function(column) {
       output[[column]] <- renderUI(
         if (! is.null(searchTool$selected())) {
-#          browser()
           queryS <- mainCorpus$query$querystring()
           if (queryS == "")
             p(searchTool$selected()[[column]])
@@ -48,6 +57,32 @@ searchContextModule <- function(input, output, session, config,
 
         } else p("select concordance line"))
     })
+  } else if (identical(config$ContextDisplay$Type, "LocalContext")) {
+    output$localcontext<- renderUI({
+      if (! is.null(searchTool$selected())) {
+        if ( searchTool$mode() == "Data")
+          positions <- cbind(1, 1000)
+        else
+          positions <- cbind(
+            max(1, searchTool$selected()$ShinyConc.KWICmatchStart - 700),
+            min(
+              stringr::str_length(searchTool$selected()$text),
+              searchTool$selected()$ShinyConc.KWICmatchEnd + 700))
+        extract <- stringr::str_sub(searchTool$selected()$text, positions)
+        extract <- paste(if (positions[1] == 1) NULL else "...",
+                         extract,
+                         if (positions[2] ==
+                             stringr::str_length(searchTool$selected()$text))
+                           NULL else "...", sep="")
+        HTML(annotate_html(extract,  mainCorpus$query$querystring()))
+      } else p("select concordance line")
+      })
   }
+  output$fulltextView <- renderUI(
+    if (! is.null(searchTool$selected()))
+      HTML(annotate_html(searchTool$selected()$text,
+                         mainCorpus$query$querystring()))
+    else p("No text selected.")
+  )
 
 }
