@@ -79,9 +79,13 @@ searchContextModule <- function(input, output, session, config,
       })
   }
   output$fulltextView <- renderUI(
-    if (! is.null(searchTool$selected()))
-      HTML(annotate_html(searchTool$selected()$text,
-                         mainCorpus$query$querystring()))
+    if (! is.null(searchTool$selected())) {
+      if (attributes(mainCorpus$query$querystring())$searchterm == "")
+        p(searchTool$selected()$text)
+      else
+        HTML(annotate_html(searchTool$selected()$text,
+                           mainCorpus$query$querystring()))
+    }
     else p("No text selected.")
   )
 
