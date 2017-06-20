@@ -63,8 +63,15 @@ searchModule <- function(input, output, session, config, mainCorpus,
     return (result)
   })
 
-  subcorpusSize <- reactive(getWordcount(mainCorpus$selectedCorpus(),
-                                              mainCorpus$select$controls()))
+  subcorpusSize <- reactive({
+    getWordcount(mainCorpus$selectedCorpus(),
+                                              mainCorpus$select$controls())
+    })
+
+  hits <- reactive({
+    if (identical(colnames(result()), "Results"))
+      0 else nrow(result())
+  })
 
   result <- reactive(
     if (config$useSubmitButton) {
@@ -109,13 +116,14 @@ searchModule <- function(input, output, session, config, mainCorpus,
     return(dt)
   }, server=TRUE)
 
-  output$Summary <- renderText(switch(
+  output$Summary <- renderText({
+    switch(
     input$searchType,
     "KWIC" = sprintf("%d tokens found (%d words in selection)",
-                     nrow(result()), subcorpusSize()),
+                     hits(), subcorpusSize()),
     "Data" = sprintf("%d entries found (%d words in selection)",
-                     nrow(result()), subcorpusSize())
-  ))
+                     hits(), subcorpusSize())
+  )})
 
   output$downloadSearch <- downloadHandler(
     filename = function() switch(input$searchType,  "KWIC" = "KWIC.csv",
