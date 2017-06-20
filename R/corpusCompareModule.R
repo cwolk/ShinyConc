@@ -89,9 +89,22 @@ compareModule <- function(input, output, session, config, corpusSelect,
     }
   )
 
-  output$compareTable <- DT::renderDataTable(compareResults(),
-                                             rownames=FALSE,
-                                             server = TRUE)
+  output$compareTable <- DT::renderDataTable({
+    if (nrow(filterCorpus(mainCorpus$selectedCorpus(),
+                          mainCorpus$query$querystring())$corpus) <1) {
+      showNotification("Target corpus empty!", type="warning")
+      return(NULL)
+    }
+
+    if (nrow(filterCorpus(referenceCorpus$selectedCorpus(),
+                          referenceCorpus$query$querystring())$corpus) <1) {
+      showNotification("Reference corpus empty!", type="warning")
+      return(NULL)
+    }
+
+    compareResults()
+
+    }, rownames=FALSE, server = TRUE)
 
   restrictionSetter <- observeEvent({ input$compareTable_rows_selected }, {
 

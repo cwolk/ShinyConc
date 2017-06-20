@@ -73,6 +73,12 @@ countModule <- function(input, output, session, config, mainCorpus,
   )
 
   output$countTable <- DT::renderDataTable( {
+
+    if (nrow(mainCorpus$selectedCorpus()$corpus) < 1) {
+      showNotification("Corpus empty!", type="warning")
+      return(NULL)
+    }
+
     data <- countResults()
 
     if (is.null(data)){

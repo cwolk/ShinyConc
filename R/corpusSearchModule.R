@@ -90,6 +90,11 @@ searchModule <- function(input, output, session, config, mainCorpus,
       return(NULL)
     }
 
+    if (nrow(mainCorpus$selectedCorpus()$corpus) < 1) {
+      showNotification("Corpus empty!", type="warning")
+      return(NULL)
+    }
+
     #browser()
 
     if (input$searchType == "Data" & all(config$SearchTool$Data$DisplayColumns
