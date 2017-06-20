@@ -26,7 +26,7 @@ compareModuleOutput <- function(id, corpusSelect, config, panel=NULL) {
              radioButtons(ns("keynessDir"), label="Keyness",
                           choices = c("Absolute" = "absolute",
                                       "Directed" = "directed"),
-                          selected="absolute", inline=TRUE))),
+                          selected="directed", inline=TRUE))),
     dataTableOutput(ns("compareTable")),
     fluidRow(
       column(4, downloadButton(ns("downloadCompare"), 'Download as .csv'))
