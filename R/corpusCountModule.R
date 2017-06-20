@@ -120,10 +120,12 @@ countModule <- function(input, output, session, config, mainCorpus,
     searchword <- as.character(countResults()[
       as.numeric(input$countTable_rows_selected), "Token"])
 
-    mainCorpus$restrictions$addRestriction(buildRestriction(
-      mainCorpus$select$all(),
-      mainCorpus$query$querystring())
-    )
+    if (! identical(attributes(mainCorpus$query$querystring())$searchterm, "")) {
+      mainCorpus$restrictions$addRestriction(buildRestriction(
+        mainCorpus$select$all(),
+        mainCorpus$query$querystring())
+      )
+    }
 
     appControl$setTab("Search")
     appControl$setSearchMode("KWIC")

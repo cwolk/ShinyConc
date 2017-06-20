@@ -111,10 +111,12 @@ compareModule <- function(input, output, session, config, corpusSelect,
     searchword <- as.character(compareResults()[
       as.numeric(input$compareTable_rows_selected), "word"])
 
-    mainCorpus$restrictions$addRestriction(buildRestriction(
-      mainCorpus$select$all(),
-      mainCorpus$query$querystring())
-    )
+    if (! identical(attributes(mainCorpus$query$querystring())$searchterm, "")) {
+      mainCorpus$restrictions$addRestriction(buildRestriction(
+        mainCorpus$select$all(),
+        mainCorpus$query$querystring())
+      )
+    }
 
     appControl$setTab("Search")
     appControl$setSearchMode("KWIC")
