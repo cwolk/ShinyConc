@@ -13,7 +13,7 @@ restrictionNotificationUI <- function(id) {
   conditionalPanel(condition = paste0("output['", ns("restrictionactive"),
                                       "']"),
                    wellPanel(fluidRow(
-                     column(8, textOutput(ns("restrictionDisplay"))),
+                     column(8, htmlOutput(ns("restrictionDisplay"))),
                      column(4, actionButton(ns("resetRestrictionButton"),
                                             "Remove restrictions")))))
 }
@@ -38,7 +38,9 @@ restrictionNotificationModule <- function(input, output, session, mainCorpus) {
   outputOptions(output, 'restrictionactive', suspendWhenHidden=FALSE)
 
   output$restrictionDisplay <- renderText(
-    sprintf("There are additional restrictions active."))
+    sprintf("There are additional restrictions active. Only searching material matching: <br> %s", paste(sapply(
+      mainCorpus$restrictions$activeRestrictions$restrictions, function(x)
+        attributes(x$querystring)$searchterm), collapse=" <br> ")))
 
   restrictionRemover <- observeEvent(input$resetRestrictionButton, {
     mainCorpus$restrictions$clearRestrictions()
