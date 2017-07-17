@@ -120,7 +120,8 @@ countModule <- function(input, output, session, config, mainCorpus,
     searchword <- as.character(countResults()[
       as.numeric(input$countTable_rows_selected), "Token"])
 
-    if (! identical(attributes(mainCorpus$query$querystring())$searchterm, "")) {
+    if (! (identical(attributes(mainCorpus$query$querystring())$searchterm, "")
+           || identical(input$countType, "Table" ))){
       mainCorpus$restrictions$addRestriction(buildRestriction(
         mainCorpus$select$all(),
         mainCorpus$query$querystring())
