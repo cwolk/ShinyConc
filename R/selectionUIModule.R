@@ -40,6 +40,8 @@ SelectorOrderToUI <- function(selectorOrder, selectors, corpus, ns) {
 }
 
 getValues <- function(corpus, column) {
+  if (! column %in% colnames(corpus$corpus))
+    stop(sprintf("Column %s not in corpus", column))
   return(sort(unique(corpus$corpus[,column])))
 }
 
