@@ -93,7 +93,7 @@ searchContextModule <- function(input, output, session, config,
         if (nrow(pre)>0)
           pre$text <- paste('<span type="context">',
                             htmltools::htmlEscape(pre$text), '<span/>')
-        result$text <- annotate_html(htmltools::htmlEscape(result$text), queryS)
+        result$text <- annotate_html(result$text, queryS)
         if (nrow(post)>0)
           post$text <- paste('<span type="context">',
                              htmltools::htmlEscape(post$text), '<span/>')
