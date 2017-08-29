@@ -26,7 +26,9 @@ searchContextOutput <- function(id, config) {
                                       label="Show full text"))),
       uiOutput(ns("localcontext"))
     )
-  }
+  } else if (identical(config$ContextDisplay$Type, "LineContext"))
+    htmlOutput(ns("contextview"))
+
 }
 
 #' Title
@@ -81,7 +83,28 @@ searchContextModule <- function(input, output, session, config,
           HTML(annotate_html(extract,  mainCorpus$query$querystring()))
       } else p("select concordance line")
       })
+  } else if (identical(config$ContextDisplay$Type, "LineContext")) {
+    output$contextview <- renderUI({
+      if (! is.null(searchTool$selected())) {
+        queryS <- mainCorpus$query$querystring()
+        pre <- searchTool$previous()(5)()
+        result <- searchTool$selected()
+        post <- searchTool$following()(5)()
+        if (nrow(pre)>0)
+          pre$text <- paste('<span type="context">',
+                            htmltools::htmlEscape(pre$text), '<span/>')
+        result$text <- annotate_html(htmltools::htmlEscape(result$text), queryS)
+        if (nrow(post)>0)
+          post$text <- paste('<span type="context">',
+                             htmltools::htmlEscape(post$text), '<span/>')
+        HTML(knitr::kable(rbind(rbind(pre, result), post)[, c("speaker", "text")],
+                   format="html", escape=FALSE, row.names=FALSE,
+                   table.attr='class="contextTable"'))
+      } else p("select concordance line")})
   }
+
+
+
   output$fulltextView <- renderUI(
     if (! is.null(searchTool$selected())) {
       if (attributes(mainCorpus$query$querystring())$searchterm == "")

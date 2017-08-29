@@ -140,21 +140,38 @@ searchModule <- function(input, output, session, config, mainCorpus,
       write.csv2(result(), file)
     })
 
+  selected <- reactive ({
+    #browser()
+    if ((! is.null(result())) && (nrow(result()) > 0) &&
+        (! is.null(input$KWIC_rows_selected))) {
+      if (input$searchType == "Data") {
+        result()[as.numeric(input$KWIC_rows_selected),]
+      } else {
+        result()[as.numeric(input$KWIC_rows_selected),]
+        #          mainCorpus$fullcorpus()$corpus[mainCorpus$fullcorpus()$corpus == result()[as.numeric(input$KWIC_rows_selected), "ShinyConc.ID"],][1,]
+      }
+    } else NULL } )
+
+  fullcorpusPosition <- reactive(
+    which(mainCorpus$fullcorpus()$corpus$ShinyConc.ID == selected()$ShinyConc.ID)
+  )
+
   return(list(
-    selected = reactive ({
+    selected = selected,
+    mode=reactive(input$searchType),
+    previous=reactive(function (num) {
       #browser()
-      if ((! is.null(result())) && (nrow(result()) > 0) &&
-          (! is.null(input$KWIC_rows_selected))) {
-        if (input$searchType == "Data") {
-          result()[as.numeric(input$KWIC_rows_selected),]
-        } else {
-          result()[as.numeric(input$KWIC_rows_selected),]
-#          mainCorpus$fullcorpus()$corpus[mainCorpus$fullcorpus()$corpus == result()[as.numeric(input$KWIC_rows_selected), "ShinyConc.ID"],][1,]
-        }
-      } else NULL
+      return(reactive(mainCorpus$fullcorpus()$corpus [
+        max(0, fullcorpusPosition() - num) : max(fullcorpusPosition() -1, 0),
+      ]))
     }),
-    mode=reactive(input$searchType)
-  ))
+    following=reactive(function(num) {
+      return(reactive(mainCorpus$fullcorpus()$corpus [
+        min(fullcorpusPosition() + 1, nrow(mainCorpus$fullcorpus)) :
+          min(nrow(mainCorpus$fullcorpus), fullcorpusPosition() + num),
+        ]))
+    }))
+  )
 
 
 }
