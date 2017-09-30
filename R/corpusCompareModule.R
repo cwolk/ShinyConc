@@ -91,13 +91,15 @@ compareModule <- function(input, output, session, config, corpusSelect,
 
   output$compareTable <- DT::renderDataTable({
     if (nrow(filterCorpus(mainCorpus$selectedCorpus(),
-                          mainCorpus$query$querystring())$corpus) <1) {
+                          mainCorpus$query$querystring(),
+                          mainCorpus$select$controls())$corpus) <1) {
       showNotification("Target corpus empty!", type="warning")
       return(NULL)
     }
 
     if (nrow(filterCorpus(referenceCorpus$selectedCorpus(),
-                          referenceCorpus$query$querystring())$corpus) <1) {
+                          referenceCorpus$query$querystring(),
+                          mainCorpus$select$controls())$corpus) <1) {
       showNotification("Reference corpus empty!", type="warning")
       return(NULL)
     }
