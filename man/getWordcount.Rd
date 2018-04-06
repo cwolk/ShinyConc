@@ -13,7 +13,7 @@ getWordcount(corpus, controls, ...)
 a number indicating the amount of words in the corpus. If the number of
  words per file is not specified in the corpus (as required by the corpus type),
  ShinyConc will default to using the number of matches for the regular
- expression "\w+"
+ expression "\\w+"
 }
 \description{
 Determine the number of words in corpus
