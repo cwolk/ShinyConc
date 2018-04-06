@@ -90,6 +90,9 @@ searchContextModule <- function(input, output, session, config,
         pre <- searchTool$previous()(5)()
         result <- searchTool$selected()
         post <- searchTool$following()(5)()
+        colsToShow <-if (is.null(config$ContextDisplay$Columns))
+          c("speaker", "text") else
+            config$ContextDisplay$Columns
         if (nrow(pre)>0)
           pre$text <- paste('<span type="context">',
                             htmltools::htmlEscape(pre$text), '<span/>')
@@ -99,7 +102,7 @@ searchContextModule <- function(input, output, session, config,
                              htmltools::htmlEscape(post$text), '<span/>')
         HTML(knitr::kable(rbind(rbind(pre, result[,colnames(result) %in%
                                                     colnames(pre)]), post)[
-                                                      , c("speaker", "text")],
+                                                      , colsToShow],
                    format="html", escape=FALSE, row.names=FALSE,
                    table.attr='class="contextTable"'))
       } else p("select concordance line")})
