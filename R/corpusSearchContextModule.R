@@ -1,7 +1,7 @@
 #' Title
 #'
-#' @param id
-#' @param config
+#' @param id module id
+#' @param config ShinyConc configuration object
 #'
 #' @return
 #' @export
