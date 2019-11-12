@@ -48,15 +48,15 @@ filterCorpus.pairCorpus <- function(corpus, querystring, controls, ...) {
 #' @export
 #'
 #' @examples
-getKWIC.pairCorpus <- function(corpus, querystring, controls, ...) {
+getKWIC.pairCorpus <- function(corpus, querystring, controls, clength, ...) {
   obj <- corpus
   corpus <- filterCorpus(corpus, querystring, controls)$corpus
   if (controls$ShinyConc.mode %in% c("Q|A", "Q&A")) {
     meta <- interleave.df(corpus, corpus)
-    Base.KWIC(cbind(corpus$Q, corpus$A), querystring, meta)
+    Base.KWIC(cbind(corpus$Q, corpus$A), querystring, meta, clength)
   } else {
     Base.KWIC(corpus[,controls$ShinyConc.mode], querystring,
-              corpus)
+              corpus, clength)
   }
 }
 

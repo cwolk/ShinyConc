@@ -51,10 +51,13 @@ searchModule <- function(input, output, session, config, mainCorpus,
     queryS <- mainCorpus$query$querystring()
     selection <- mainCorpus$selectedCorpus()
 
+    clength <- ifelse(is.null(config$SearchTool$KWIC$ContextLength), 30,
+                      config$SearchTool$KWIC$ContextLength)
+
     result <- runWithRegExCatch(switch(input$searchType,
                                        "Data" = filterCorpus,
                                        "KWIC" = getKWIC), selection, queryS,
-                                mainCorpus$select$controls())
+                                mainCorpus$select$controls(), clength)
 
     if (input$searchType == "Data") {
       result <- result$corpus
