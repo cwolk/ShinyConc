@@ -43,7 +43,7 @@ loadCorpus <- function(corpusdir, meta, config=NULL,
       })
   }
 
-  meta <- processCorpus(meta, config)
+  meta <- processCorpus(meta, type)
 
   corpus <- ctypemapper[[type]](meta, KWICcolselect=config$SearchTool$KWIC$DisplayExtraColumns)
 
